@@ -1,0 +1,38 @@
+{
+  "name": "jrogaishio/laravel-api-doc",
+  "description": "Automatically parse laravel api routes and store them in an OpenAPI compatible format",
+  "type": "package",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jacob Rogaishio",
+      "email": "me@jacobrogaishio.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "Jrogaishio\\LaravelApiDoc\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "laravel/framework": "^10",
+    "goldspecdigital/laravel-eloquent-uuid": "^10.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5.28",
+    "laravel/pint": "^1.6"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Jrogaishio\\LaravelApiDoc\\App\\Providers\\AppServiceProvider"
+      ]
+    }
+  }
+}
