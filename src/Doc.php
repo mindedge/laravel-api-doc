@@ -10,6 +10,7 @@ use ReflectionMethod;
 use Exception;
 use Jrogaishio\LaravelApiDoc\Global\Document;
 use Jrogaishio\LaravelApiDoc\Global\RouteDocument;
+use Jrogaishio\LaravelApiDoc\Global\Tag;
 
 class Doc
 {
@@ -64,7 +65,7 @@ class Doc
                     // Eg MyFooController -> MyFoo
                     preg_match('/(?<name>\w+)Controller/', $route->getControllerClass(), $controllerMatch);
                     if (!empty($controllerMatch['name'])) {
-                        $routeItem->tags = collect([$controllerMatch['name']]);
+                        $routeItem->tags = [$controllerMatch['name']];
 
                         // Make sure we only add it once
                         if (!$controllers->contains($route->getControllerClass())) {
@@ -103,11 +104,11 @@ class Doc
             preg_match('/(?<name>\w+)Controller/', $controller, $controllerMatch);
 
             if (!empty($phpdoc->title) && !empty($controllerMatch)) {
-                $tag = (object) [
+                $tag = new Tag([
                     'key' => $controllerMatch['name'],
                     'name' => $phpdoc->title,
                     'description' => $phpdoc->description
-                ];
+                ]);
                 $doc->tags->push($tag);
             }
         }
