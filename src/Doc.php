@@ -18,13 +18,17 @@ class Doc
      * Determine all the routes, route parameters, and middleware used and return them as an object
      *
      * @param $version=1.0 The api version to target the documentation generation for
+     * @param string $title='My Api' The api info title
+     * @param string $description='My Sample Api' The api info description
      *
      * @return Document The generated document with routes
      */
-    public static function generate($version = '1.0'): Document
+    public static function generate($version = '1.0', $title = 'My Api', $description = 'My Sample Api'): Document
     {
         $doc = new Document([
             'version' => $version,
+            'name' => $title,
+            'description' => $description,
         ]);
 
         $routeCollection = Route::getRoutes();
@@ -80,16 +84,15 @@ class Doc
                     // Save the phpdoc info
                     $routeItem->phpdoc = self::phpdoc($rMethod);
 
+
                     // Figure out the parameter name, type, etc
                     foreach ($params as $param) {
-                        if ($param->getType() !== null) {
-                            $routeItem->parameters[] = (object) [
-                                'name' => $param->getName(),
-                                'type' => $param->getType()->getName(),
-                                'in' => 'path',
-                                'value' => '',
-                            ];
-                        }
+                        $routeItem->parameters[] = (object) [
+                            'name' => $param->getName(),
+                            'type' => $param?->getType()?->getName() ?? 'mixed',
+                            'in' => 'path',
+                            'value' => '',
+                        ];
                     }
 
                     $doc->routes->push($routeItem);

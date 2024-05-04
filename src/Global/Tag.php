@@ -4,34 +4,17 @@ namespace Jrogaishio\LaravelApiDoc\Global;
 
 class Tag
 {
-    public $name;
-    public $description;
-    public $externalDocs;
-
-    public function __set($name, $value)
-    {
-        $method = 'set' . ucfirst($name);
-        $this->{$method}($value);
-    }
-
-    public function setName(string $value)
-    {
-        $this->name = $value;
-    }
-    public function setDescription(string $value)
-    {
-        $this->description = $value;
-    }
-    public function externalDocs(array $value)
-    {
-        $this->externalDocs = $value;
-    }
+    public string $key;
+    public string $name;
+    public string $description;
+    public array $externalDocs;
 
     public function __construct(array|object $props)
     {
         if (is_array($props)) {
             $props = (object) [...$props];
         }
+        $this->key = $props->key ?? '';
         $this->name = $props->name ?? '';
         $this->description = $props->description ?? '';
         $this->externalDocs = $props->externalDocs ?? [];
@@ -40,10 +23,14 @@ class Tag
     public function toArray()
     {
         $data = [
+            'key' => $this->key,
             'name' => $this->name,
             'description' => $this->description,
-            'externalDocs' => $this->externalDocs,
         ];
+
+        if (!empty($this->externalDocs)) {
+            $data['externalDocs'] = $this->externalDocs;
+        }
 
         return $data;
     }

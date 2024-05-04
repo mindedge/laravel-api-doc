@@ -13,6 +13,7 @@ class RouteDocument
     public string $method;
     public Collection $middleware;
     public Collection $parameters;
+    public array $responses;
     public object $phpdoc;
 
     public function __construct(array|object $props)
@@ -28,5 +29,25 @@ class RouteDocument
         $this->middleware = collect($props->middleware ?? []);
         $this->parameters = collect($props->parameters ?? []);
         $this->phpdoc = $props->phpdoc ?? (object) [];
+        $this->responses = [
+            200 => [
+                'description' => '',
+            ]
+        ];
+    }
+
+    public function toArray()
+    {
+        return [
+            'path' => $this->path,
+            'tags' => $this->tags,
+            'controller' => $this->controller,
+            'action' => $this->action,
+            'method' => $this->method,
+            'middleware' => $this->middleware->toArray(),
+            'parameters' => $this->parameters->toArray(),
+            'responses' => $this->responses,
+            'phpdoc' => $this->phpdoc,
+        ];
     }
 }
