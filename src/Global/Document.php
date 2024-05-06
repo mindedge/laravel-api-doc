@@ -11,21 +11,33 @@ class Document
     public string $name;
     public string $description;
     public string $version;
+
+    public License $license;
+    public string $contact;
+    public string $termsOfService;
+
     public Collection $servers;
     public Collection $tags;
     public Collection $components;
+
     public bool $deprecated;
     public bool $enabled;
     public array $metadata;
     public Collection $routes;
 
-    public function __construct(array|object $props)
+    public function __construct(array|object $props = [])
     {
         if (is_array($props)) {
             $props = (object) [...$props];
         }
+
         $this->name = $props->name ?? '';
         $this->description = $props->description ?? '';
+
+        $this->contact = $props->contact ?? '';
+        $this->termsOfService = $props->termsOfService ?? '';
+        $this->license = new License($props->license ?? []);
+
         $this->version = $props->version ?? '';
         $this->servers = collect($props->servers ?? []);
         $this->tags = collect($props->tags ?? []);
@@ -42,6 +54,9 @@ class Document
             'name' => $this->name,
             'description' => $this->description,
             'version' => $this->version,
+            'license' => $this->license->toArray(),
+            'contact' => $this->contact,
+            'termsOfService' => $this->termsOfService,
             'servers' => $this->servers->toArray(),
             'tags ' => $this->tags->map(function ($t) {
                 return $t->toArray();
@@ -58,16 +73,20 @@ class Document
         return $data;
     }
 
-    public function toOpenApi(string $version = '3.1', string $format = 'yaml')
+    public function toOpenApi(string $version = '3.0.3', string $format = 'yaml')
     {
+        $supportedVersions = ['3.0.3'];
+        if (!in_array($version, $supportedVersions)) {
+            throw new Exception('Unsupported Openapi version. Supported versions are: ' . implode(',', $supportedVersions));
+        }
         $data = [
-            'openapi' => '3.0.3',
+            'openapi' => $version,
             'info' => [
                 'title' => $this->name,
                 'description' => $this->description,
-                'termsOfService' => '',
-                'contact' => ['email' => 'sample@example.com'],
-                'license' => ['name' => '', 'url' => ''],
+                'termsOfService' => $this->termsOfService,
+                'contact' => ['email' => $this->contact],
+                'license' => $this->license->toArray(),
                 'version' => $this->version,
             ],
             'externalDocs' => [
@@ -76,7 +95,7 @@ class Document
             ],
             'servers' => $this->servers->toArray(),
             'tags' => $this->tags->map(function ($t) {
-                $tag = ['name' => $t->name, 'description' => $t->description];
+                $tag = ['name' => $t->key, 'description' => trim($t->name . ' ' . $t->description)];
                 if (!empty($t->externalDocs)) {
                     $tag['externalDocs'] = $t->externalDocs;
                 }
@@ -84,6 +103,11 @@ class Document
             })->toArray(),
             'paths' => [],
         ];
+
+        // No contact, remove the key
+        if (empty($this->contact)) {
+            unset($data['info']['contact']);
+        }
 
         foreach ($this->routes as $route) {
             if (empty($data['paths']['/' . $route->path])) {

@@ -9,7 +9,7 @@ class Tag
     public string $description;
     public array $externalDocs;
 
-    public function __construct(array|object $props)
+    public function __construct(array|object $props = [])
     {
         if (is_array($props)) {
             $props = (object) [...$props];

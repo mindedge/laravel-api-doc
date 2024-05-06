@@ -18,18 +18,19 @@ class Doc
      * Determine all the routes, route parameters, and middleware used and return them as an object
      *
      * @param $version=1.0 The api version to target the documentation generation for
-     * @param string $title='My Api' The api info title
-     * @param string $description='My Sample Api' The api info description
+     * @param Document|null $doc=null An api document with prefilled values
      *
      * @return Document The generated document with routes
      */
-    public static function generate($version = '1.0', $title = 'My Api', $description = 'My Sample Api'): Document
+    public static function generate($version = '1.0', Document|null $doc = null): Document
     {
-        $doc = new Document([
-            'version' => $version,
-            'name' => $title,
-            'description' => $description,
-        ]);
+        if (empty($doc)) {
+            $doc = new Document([
+                'version' => $version,
+                'name' => 'My Api',
+                'description' => 'My sample api',
+            ]);
+        }
 
         $routeCollection = Route::getRoutes();
         $controllers = collect([]);
@@ -123,16 +124,13 @@ class Doc
      * Sync the documentation to the database
      *
      * @param string $version='1.0' The api version to save this as
-     * @param string $title='My Api' The api info title
-     * @param string $description='My Sample Api' The api info description
+     * @param Document|null $doc=null An api document with prefilled values
      *
      * @return ApiDoc
      */
-    public static function sync(string $version = '1.0', $title = 'My Api', $description = 'My Sample Api'): ApiDoc
+    public static function sync(string $version = '1.0', Document|null $doc = null): ApiDoc
     {
-        $doc = self::generate($version);
-        $doc->name = $title;
-        $doc->description = $description;
+        $doc = self::generate($version, $doc);
 
         $docModel = self::syncDoc($version, $doc);
         $routes = self::syncRoutes($version, $doc);
