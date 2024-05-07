@@ -36,7 +36,10 @@ class RouteDocument
         ];
     }
 
-    public function toArray()
+    /**
+     * Converts the properties of this class into an array format
+     */
+    public function toArray(): array
     {
         return [
             'path' => $this->path,
@@ -45,7 +48,9 @@ class RouteDocument
             'action' => $this->action,
             'method' => $this->method,
             'middleware' => $this->middleware->toArray(),
-            'parameters' => $this->parameters->toArray(),
+            'parameters' => $this->parameters->map(function ($p) {
+                return $p->toArray();
+            })->toArray(),
             'responses' => $this->responses,
             'phpdoc' => $this->phpdoc,
         ];

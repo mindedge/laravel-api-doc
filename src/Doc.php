@@ -10,6 +10,7 @@ use ReflectionMethod;
 use Exception;
 use Jrogaishio\LaravelApiDoc\Global\Document;
 use Jrogaishio\LaravelApiDoc\Global\RouteDocument;
+use Jrogaishio\LaravelApiDoc\Global\RouteParameter;
 use Jrogaishio\LaravelApiDoc\Global\Tag;
 
 class Doc
@@ -88,12 +89,11 @@ class Doc
 
                     // Figure out the parameter name, type, etc
                     foreach ($params as $param) {
-                        $routeItem->parameters[] = (object) [
+                        $routeItem->parameters[] = new RouteParameter([
                             'name' => $param->getName(),
                             'type' => $param?->getType()?->getName() ?? 'mixed',
                             'in' => 'path',
-                            'value' => '',
-                        ];
+                        ]);
                     }
 
                     $doc->routes->push($routeItem);

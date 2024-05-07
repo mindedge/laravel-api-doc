@@ -48,7 +48,10 @@ class Document
         $this->routes = collect($props->routes ?? []);
     }
 
-    public function toArray()
+    /**
+     * Converts the properties of this class into an array format
+     */
+    public function toArray(): array
     {
         $data = [
             'name' => $this->name,
@@ -119,9 +122,25 @@ class Document
                 'summary' => $route->phpdoc->title,
                 'description' => $route->phpdoc->description,
                 'parameters' => $route->parameters->filter(function ($p) {
-                    return $p->name !== 'request';
+                    return !$p->getIsRequest();
                 })->map(function ($p) {
-                    return ['name' => $p->name, 'in' => $p->in, 'required' => true, 'schema' => ['type' => 'string']];
+                    $primitive = $p->getPrimitiveType();
+                    // Map of PHP types to their OpenAPI equivalents
+                    $openApiTypeMap = [
+                        'null' => 'string',
+                        'bool' => 'boolean',
+                        'int' => 'integer',
+                        'float' => 'number',
+                        'string' => 'string',
+                        'array' => 'array',
+                        'object' => 'object',
+                        'callable' => 'object',
+                        'resource' => 'object',
+                    ];
+                    // If the primitive type isn't in the list of types accepted by openapi, default to string
+                    // This is usually when the php type is 'mixed' and cannot be determined
+                    $type = $openApiTypeMap[$primitive] ?? 'string';
+                    return ['name' => $p->name, 'in' => $p->in, 'required' => true, 'schema' => ['type' => $type]];
                 })->values()->toArray(),
                 'responses' => $route->responses,
             ];

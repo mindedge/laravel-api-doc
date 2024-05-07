@@ -16,7 +16,10 @@ class License
         $this->url = $props->url ?? '';
     }
 
-    public function toArray()
+    /**
+     * Converts the properties of this class into an array format
+     */
+    public function toArray(): array
     {
         $data = [
             'name' => $this->name,

@@ -20,7 +20,10 @@ class Tag
         $this->externalDocs = $props->externalDocs ?? [];
     }
 
-    public function toArray()
+    /**
+     * Converts the properties of this class into an array format
+     */
+    public function toArray(): array
     {
         $data = [
             'key' => $this->key,
