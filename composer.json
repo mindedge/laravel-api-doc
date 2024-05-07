@@ -28,12 +28,5 @@
   "require-dev": {
     "phpunit/phpunit": "^9.5.28",
     "laravel/pint": "^1.6"
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Jrogaishio\\LaravelApiDoc\\App\\Providers\\AppServiceProvider"
-      ]
-    }
   }
 }

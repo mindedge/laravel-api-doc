@@ -76,7 +76,15 @@ class Document
         return $data;
     }
 
-    public function toOpenApi(string $version = '3.0.3', string $format = 'yaml')
+    /**
+     * Returns the document in the OpenAPI format
+     *
+     * @param string $version='3.0.3' The target OpenAPI version
+     * @param string $format='yaml' Accepts 'yaml', 'json', 'array' as the target export type.
+     *
+     * @return string|array Returns the OpenAPI document in either a string yaml/json or php array
+     */
+    public function toOpenApi(string $version = '3.0.3', string $format = 'yaml'): string|array
     {
         $supportedVersions = ['3.0.3'];
         if (!in_array($version, $supportedVersions)) {
@@ -124,23 +132,7 @@ class Document
                 'parameters' => $route->parameters->filter(function ($p) {
                     return !$p->getIsRequest();
                 })->map(function ($p) {
-                    $primitive = $p->getPrimitiveType();
-                    // Map of PHP types to their OpenAPI equivalents
-                    $openApiTypeMap = [
-                        'null' => 'string',
-                        'bool' => 'boolean',
-                        'int' => 'integer',
-                        'float' => 'number',
-                        'string' => 'string',
-                        'array' => 'array',
-                        'object' => 'object',
-                        'callable' => 'object',
-                        'resource' => 'object',
-                    ];
-                    // If the primitive type isn't in the list of types accepted by openapi, default to string
-                    // This is usually when the php type is 'mixed' and cannot be determined
-                    $type = $openApiTypeMap[$primitive] ?? 'string';
-                    return ['name' => $p->name, 'in' => $p->in, 'required' => true, 'schema' => ['type' => $type]];
+                    return $p->toOpenApi();
                 })->values()->toArray(),
                 'responses' => $route->responses,
             ];
@@ -150,6 +142,8 @@ class Document
             return Yaml::dump($data, 10000, 4, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
         } elseif ($format === 'json') {
             return json_encode($data);
+        } elseif ($format === 'array') {
+            return $data;
         } else {
             throw new Exception('Invalid format! Can only export to yaml or json');
         }
