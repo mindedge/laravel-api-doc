@@ -37,6 +37,26 @@ class RouteDocument
     }
 
     /**
+     * Get the route summary from phpdoc comments
+     *
+     * @return string
+     */
+    public function getSummary(): string
+    {
+        return $this?->phpdoc?->title ?? '';
+    }
+
+    /**
+     * Get the route description from phpdoc comments
+     *
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this?->phpdoc?->description ?? '';
+    }
+
+    /**
      * Converts the properties of this class into an array format
      */
     public function toArray(): array

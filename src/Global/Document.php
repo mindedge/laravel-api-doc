@@ -127,8 +127,8 @@ class Document
 
             $data['paths']['/' . $route->path][strtolower($route->method)] = [
                 'tags' => $route->tags ?? [],
-                'summary' => $route->phpdoc->title,
-                'description' => $route->phpdoc->description,
+                'summary' => $route->getSummary(),
+                'description' => $route->getDescription(),
                 'parameters' => $route->parameters->filter(function ($p) {
                     return !$p->getIsRequest();
                 })->map(function ($p) {
