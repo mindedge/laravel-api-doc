@@ -2,6 +2,7 @@
 
 namespace Jrogaishio\LaravelApiDoc\Global;
 
+use Exception;
 use Illuminate\Support\Collection;
 
 class RouteDocument
@@ -73,6 +74,33 @@ class RouteDocument
             })->toArray(),
             'responses' => $this->responses,
             'phpdoc' => $this->phpdoc,
+        ];
+    }
+
+    /**
+     * Converts the parameter into the OpenApi format
+     *
+     * @param string $version='3.0.3'
+     * @return array The OpenApi formatted data
+     */
+    public function toOpenApi(string $version = '3.0.3'): array
+    {
+        $supportedVersions = ['3.0.3'];
+        if (!in_array($version, $supportedVersions)) {
+            throw new Exception('Unsupported Openapi version. Supported versions are: ' . implode(',', $supportedVersions));
+        }
+
+        return [
+            'tags' => $this->tags ?? [],
+            'summary' => $this->getSummary(),
+            'description' => $this->getDescription(),
+            'parameters' => $this->parameters->filter(function ($p) {
+                return !$p->getIsRequest();
+            })->map(function ($p) use ($version) {
+                return $p->toOpenApi($version);
+            })->values()->toArray(),
+            'responses' => $this->responses,
+            'x-middleware' => $this->middleware->toArray(),
         ];
     }
 }

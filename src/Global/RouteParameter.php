@@ -181,6 +181,12 @@ class RouteParameter
         return $data;
     }
 
+    /**
+     * Converts the parameter into the OpenApi format
+     *
+     * @param string $version='3.0.3'
+     * @return array The OpenApi formatted data
+     */
     public function toOpenApi(string $version = '3.0.3'): array
     {
         $supportedVersions = ['3.0.3'];
