@@ -1,17 +1,14 @@
 <?php
 
-namespace Jrogaishio\LaravelApiDoc;
+namespace MindEdge\LaravelApiDoc;
 
-use Jrogaishio\LaravelApiDoc\App\Models\ApiDoc;
-use Jrogaishio\LaravelApiDoc\App\Models\ApiDocRoute;
 use Illuminate\Support\Facades\Route;
 use ReflectionClass;
 use ReflectionMethod;
-use Exception;
-use Jrogaishio\LaravelApiDoc\Global\Document;
-use Jrogaishio\LaravelApiDoc\Global\RouteDocument;
-use Jrogaishio\LaravelApiDoc\Global\RouteParameter;
-use Jrogaishio\LaravelApiDoc\Global\Tag;
+use MindEdge\LaravelApiDoc\Global\Document;
+use MindEdge\LaravelApiDoc\Global\RouteDocument;
+use MindEdge\LaravelApiDoc\Global\RouteParameter;
+use MindEdge\LaravelApiDoc\Global\Tag;
 
 class Doc
 {

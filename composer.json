@@ -1,5 +1,5 @@
 {
-  "name": "jrogaishio/laravel-api-doc",
+  "name": "mindedge/laravel-api-doc",
   "description": "Automatically parse laravel api routes and store them in an OpenAPI compatible format",
   "type": "package",
   "license": "MIT",
@@ -12,7 +12,7 @@
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
-      "Jrogaishio\\LaravelApiDoc\\": "src/"
+      "MindEdge\\LaravelApiDoc\\": "src/"
     }
   },
   "autoload-dev": {

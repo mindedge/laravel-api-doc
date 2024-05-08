@@ -1,6 +1,6 @@
 <?php
 
-namespace Jrogaishio\LaravelApiDoc\Global;
+namespace MindEdge\LaravelApiDoc\Global;
 
 use Exception;
 use Illuminate\Support\Collection;
