@@ -131,8 +131,8 @@ class Document
                 'description' => $route->getDescription(),
                 'parameters' => $route->parameters->filter(function ($p) {
                     return !$p->getIsRequest();
-                })->map(function ($p) {
-                    return $p->toOpenApi();
+                })->map(function ($p) use ($version) {
+                    return $p->toOpenApi($version);
                 })->values()->toArray(),
                 'responses' => $route->responses,
             ];
