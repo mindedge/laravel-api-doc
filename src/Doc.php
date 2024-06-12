@@ -42,8 +42,6 @@ class Doc
             if (!preg_match('/^\/?' . preg_quote($version) . '/', $uri)) {
                 continue;
             }
-            // Trim the version off the uri since we're capturing it on the document itself
-            $uri = preg_replace('/^\/?' . preg_quote($version) . '\/?/', '', $uri);
 
             // Make sure the registered route actually exists and points to a valid class/method
             if ($route->getControllerClass() && method_exists($route->getControllerClass(), $route->getActionMethod())) {
