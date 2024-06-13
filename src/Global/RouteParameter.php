@@ -114,23 +114,35 @@ class RouteParameter
         return $ret;
     }
 
+
     public function getQueryParameters(): Collection
     {
         $result = collect([]);
+        return $result;
+    }
+
+    /**
+     * Resolves the `SomeFormRequest $request` rules and converts them to a RequestBody or null if it's not a request
+     *
+     * @return RequestBody|null The RequestBody or null if it's not a form request
+     */
+    public function getRequestBody(): RequestBody|null
+    {
+        $result = null;
         if ($this->getIsFormRequest()) {
+            $result = new RequestBody();
             $formRequest = new $this->type();
             foreach ($formRequest?->rules() ?? [] as $key => $rule) {
                 $parsed = $this->parseRule($rule);
 
-                $param = new RouteParameter([
+                $param = new RequestBodyParameter([
                     'name' => $key,
-                    'description' => $parsed->description,
-                    'in' => 'query',
                     'type' => $parsed->type,
+                    'description' => $parsed->description,
                     'required' => $parsed->isRequired,
                 ]);
 
-                $result->push($param);
+                $result->addParameter($param);
             }
         }
         return $result;

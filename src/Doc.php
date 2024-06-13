@@ -103,7 +103,11 @@ class Doc
 
                         // If it's a form request, try and get any registered query params
                         if ($routeParam->getIsFormRequest()) {
-                            $queryParams = $queryParams->merge($routeParam->getQueryParameters());
+                            $requestBody = $routeParam->getRequestBody();
+                            // Make sure the body as actually defined
+                            if ($requestBody !== null) {
+                                $routeItem->requestBody->push($requestBody);
+                            }
                         }
 
                         $routeItem->parameters->push($routeParam);
