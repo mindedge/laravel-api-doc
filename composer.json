@@ -21,8 +21,7 @@
     }
   },
   "require": {
-    "laravel/framework": "^10",
-    "goldspecdigital/laravel-eloquent-uuid": "^10.0",
+    "laravel/framework": ">=10",
     "symfony/yaml": "^6"
   },
   "require-dev": {
