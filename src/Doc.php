@@ -39,7 +39,7 @@ class Doc
             $uri = $route->uri();
 
             // Exclude any routes of the wrong api version. This also excludes non-prefixed routes
-            if (!preg_match('/^\/?' . preg_quote($version) . '/', $uri)) {
+            if (!preg_match('/^\/?' . preg_quote($version, '/') . '/', $uri)) {
                 continue;
             }
 
